@@ -32,13 +32,14 @@ This project helps farmers save water and improve crop health by:
 ##  How It Works
 
 ```mermaid
-flowchart LR
-    SoilSensors --> ESP32
-    DHT22 --> ESP32
-    ESP32 --> OpenWeather[OpenWeatherMap]
-    ESP32 --> Firebase
-    ESP32 --> GroqAI
-    GroqAI --> ESP32
-    ESP32 --> RelayModule
-    ESP32 --> TwilioSMS
-    Firebase --> WebDashboard
+flowchart TD
+    WeatherAPI([🌦️ Weather API]) -->|Weather Data| ESP32{{🟠 ESP32<br/>Microcontroller}}
+    SoilSensor([🌱 Soil Moisture Sensor]) -->|Moisture Values| ESP32
+    DHT22([🌡️ DHT22 Sensor]) -->|Temp & Humidity| ESP32
+    ESP32 -->|R/W Data| Firebase[(☁️ Firebase)]
+    APP([📱 App]) <-->|R/W Data| Firebase
+    ESP32 -->|HTTP Protocol| GroqAI{🧠 GROQ AI}
+    GroqAI -->|Decision| ESP32
+    ESP32 -->|Send Command| Relay([🔌 Relay])
+    Relay -->|ON / OFF| Pump[💦 Water Pump]
+    ESP32 -->|SMS Alerts| Twilio([📲 Twilio API])
